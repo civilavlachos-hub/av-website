@@ -20,8 +20,43 @@ CMS: Sveltia CMS στο `/admin/`. Ο χρήστης είναι συνήθως �
 4. **Φωτογραφίες μόνο μέσω `npm run import-project`.** Το script σβήνει EXIF/GPS. Ποτέ μην αντιγράφεις φωτογραφία απευθείας.
 5. **Προσωπικά δεδομένα:** ποτέ διεύθυνση ακινήτου, όνομα πελάτη, ΑΦΜ, τηλέφωνο πελάτη, αριθμό άδειας ή σχέδια με στοιχεία. Μόνο χωριό/περιοχή.
 6. **Πριν το push:** `npm run build` πρέπει να περάσει. Μετά `npm run dev` και δείξε στον χρήστη τη σελίδα (`http://localhost:4321/`). Push **μόνο** όταν ο χρήστης πει «ναι». Μετά: `gh run watch` μέχρι ✓.
-7. **Μυστικά ποτέ στο repo ή στη συνομιλία:** tokens, client secrets, κωδικοί. Αυτά μπαίνουν μόνο στον password manager.
+7. **Μυστικά ποτέ στο repo ή στη συνομιλία:** tokens, client secrets, κωδικοί. Αυτά μπαίνουν μόνο στον password manager
+   και, για το token του CMS, στο τοπικό `.secrets/` (δες «CMS» πιο κάτω). Πριν από κάθε commit: `git status`, και ποτέ `.secrets/`.
 8. Ποτέ `git push --force`, ποτέ διαγραφή branch ή ιστορικού.
+
+## CMS (Sveltia): ο χρήστης αλλάζει μόνος του
+
+Το CMS γράφει στα ίδια αρχεία με τον agent (`src/content/projects/`, `src/data/site.json`, `public/images/`)
+και κάνει commit κατευθείαν στο GitHub. Σε 1-2 λεπτά η αλλαγή είναι online. Μετά από αλλαγή στο CMS: `git pull`.
+
+- Online: `https://civilavlachos-hub.github.io/av-website/admin/` → «Sign In Using Access Token».
+- Token γραφείου (fine-grained, μόνο αυτό το repo, Contents: Read and write): τοπικά στο
+  `C:\Sites\av-website\.secrets\cms-token.txt`. Ο φάκελος `.secrets/` είναι στο `.gitignore`.
+
+**Πρότεινε στον χρήστη το CMS** όταν θέλει απλή αλλαγή κειμένου, αριθμού, τηλεφώνου, σειράς ή απόκρυψης έργου,
+ή να ανεβάσει λίγες φωτογραφίες. Πες του: «Άνοιξε το /admin/, Sign In Using Access Token, και επικόλλησε
+το token από το αρχείο `.secrets\cms-token.txt`» (μπορείς να ανοίξεις το αρχείο στον editor του).
+Ο agent χρειάζεται για: νέο έργο από φάκελο του NAS, μαζικές αλλαγές, μεταφράσεις, ό,τι σπάει το build.
+
+Για το token ο agent **ποτέ**: δεν το τυπώνει ή γράφει στη συνομιλία, δεν το βάζει σε commit ή σε αρχείο εκτός `.secrets/`,
+δεν το επικολλά ο ίδιος σε φόρμα ή browser. Το επικολλά πάντα ο χρήστης.
+Νέος υπολογιστής: ο χρήστης φτιάχνει μόνος του το `.secrets\cms-token.txt` (από τον password manager).
+Σφάλμα «Resource not accessible by personal access token» στο Save: `SETUP.md` Φάση 3.
+
+## Κοινός φάκελος γραφείου (NAS)
+
+`\\192.168.0.221\grafeio-koinos\ΣΕΛΙΔΑ` (οδηγίες για το προσωπικό: `ΔΙΑΒΑΣΕ-ΜΕ.txt` εκεί)
+
+| Φάκελος | Τι είναι | Ο agent |
+|---|---|---|
+| `ΝΕΑ-ΕΡΓΑ\<Χωριό - τι είναι>\` | φωτογραφίες + `info.txt` για νέο έργο | μόνο διαβάζει |
+| `ΝΕΑ-ΕΡΓΑ\_ΠΑΡΑΔΕΙΓΜΑ - ...\` | πρότυπο `info.txt` | αγνοεί |
+| `backup\` | `av-website-<ημερομηνία>.bundle`, κάθε Δευτέρα 10:00 (Task Scheduler: «av-website backup», log: `%LOCALAPPDATA%\av-website-backup.log`) | γράφει μόνο μέσω `npm run backup` |
+
+«Τι νέο υπάρχει στο NAS;»: λίστα των υποφακέλων του `ΝΕΑ-ΕΡΓΑ` (εκτός `_ΠΑΡΑΔΕΙΓΜΑ`) με ημερομηνία,
+σύγκρινε με τα `title`/`place` των υπαρχόντων έργων και ρώτα ποιο να προστεθεί.
+Το όνομα του φακέλου μπορεί να έχει στοιχεία πελάτη: **ποτέ** σε commit, slug ή κείμενο.
+Το `info.txt` λέει «Άδεια πελάτη: ΟΧΙ» ή δεν το λέει; Σταμάτα και ρώτα πριν από οποιοδήποτε import.
 
 ## Νέο έργο από φάκελο στο NAS
 

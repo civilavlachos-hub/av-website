@@ -6,3 +6,6 @@ dist/
 .dev.vars
 .sveltia-tmp-*
 *.bundle
+
+# Τοπικά μυστικά (token CMS κ.λπ.): ΠΟΤΕ στο GitHub
+.secrets/
