@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="'Segoe UI', system-ui, -apple-system, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1100" width="1280" height="1100" font-family="'Segoe UI', system-ui, -apple-system, Arial, sans-serif">
   <title>Πώς δουλεύει το site του γραφείου</title>
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
@@ -8,113 +8,143 @@
       .h { font-size: 19px; font-weight: 700; fill: #1f2328; }
       .t { font-size: 15px; fill: #31363d; }
       .s { font-size: 13px; fill: #57606a; }
+      .m { font-size: 13px; font-family: Consolas, 'Cascadia Mono', monospace; fill: #1f2328; }
       .b { font-weight: 700; }
       .k { font-size: 12px; font-weight: 700; letter-spacing: .08em; fill: #57606a; }
       .ln { stroke: #57606a; stroke-width: 2.2; fill: none; marker-end: url(#arr); }
+      .dl { stroke: #57606a; stroke-width: 2; fill: none; stroke-dasharray: 6 5; marker-end: url(#arr); }
       .lbl { font-size: 13px; fill: #57606a; font-style: italic; }
     </style>
   </defs>
 
-  <rect width="1200" height="900" fill="#f7f4ee"/>
+  <rect width="1280" height="1100" fill="#f7f4ee"/>
 
   <!-- Τίτλος -->
-  <text x="40" y="52" font-size="28" font-weight="700" fill="#1f2328">Πώς δουλεύει το site του γραφείου</text>
-  <text x="40" y="80" class="t">Δύο τρόποι να το αλλάξεις. Μία αποθήκη (GitHub). Όλα τα άλλα γίνονται μόνα τους.</text>
+  <text x="30" y="50" font-size="28" font-weight="700" fill="#1f2328">Πώς δουλεύει το site του γραφείου</text>
+  <text x="30" y="78" class="t">Μία αποθήκη: το GitHub. Υλικό για νέα έργα: ο κοινός φάκελος στο NAS. Όλα τα άλλα γίνονται μόνα τους.</text>
 
   <!-- Στήλες -->
-  <text x="40" y="122" class="k">1. ΑΛΛΑΖΕΙΣ ΤΟ SITE</text>
-  <text x="470" y="122" class="k">2. ΑΠΟΘΗΚΕΥΕΤΑΙ</text>
-  <text x="800" y="122" class="k">3. ΒΓΑΙΝΕΙ ONLINE</text>
+  <text x="30" y="122" class="k">1. ΥΛΙΚΟ (NAS)</text>
+  <text x="360" y="122" class="k">2. ΑΛΛΑΖΕΙΣ ΤΟ SITE</text>
+  <text x="740" y="122" class="k">3. ΑΠΟΘΗΚΗ</text>
+  <text x="1000" y="122" class="k">4. ONLINE</text>
+
+  <!-- NAS -->
+  <rect x="30" y="136" width="290" height="344" rx="14" fill="#fff" stroke="#b45309" stroke-width="2.5"/>
+  <rect x="30" y="136" width="8" height="344" rx="4" fill="#b45309"/>
+  <text x="52" y="166" class="h">Κοινός φάκελος ΣΕΛΙΔΑ</text>
+  <text x="52" y="188" class="m">\\192.168.0.221\</text>
+  <text x="52" y="205" class="m">grafeio-koinos\ΣΕΛΙΔΑ</text>
+  <text x="52" y="238" class="t"><tspan class="b">ΝΕΑ-ΕΡΓΑ\</tspan></text>
+  <text x="52" y="258" class="s">Ένας υποφάκελος ανά έργο:</text>
+  <text x="52" y="276" class="s">«Χωριό - τι είναι», με φωτογραφίες</text>
+  <text x="52" y="294" class="s">JPG/PNG και ένα info.txt.</text>
+  <text x="52" y="312" class="s">Τον γεμίζει όποιος θέλει στο γραφείο.</text>
+  <text x="52" y="346" class="t"><tspan class="b">backup\</tspan></text>
+  <text x="52" y="366" class="s">Όλο το site + ιστορικό, κάθε Δευτέρα.</text>
+  <text x="52" y="400" class="t"><tspan class="b">ΔΙΑΒΑΣΕ-ΜΕ.txt</tspan></text>
+  <text x="52" y="420" class="s">Οδηγίες για όλους.</text>
+  <text x="52" y="458" class="s">Το site ΔΕΝ τρέχει από εδώ: εδώ</text>
+  <text x="52" y="474" class="s">μόνο υλικό και αντίγραφα ασφαλείας.</text>
 
   <!-- CMS -->
-  <rect x="40" y="136" width="360" height="150" rx="14" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
-  <rect x="40" y="136" width="8" height="150" rx="4" fill="#2563eb"/>
-  <text x="64" y="166" class="h">Α. CMS: φόρμες στον browser</text>
-  <text x="64" y="192" class="t">Άνοιξε <tspan class="b">&lt;site&gt;/admin/</tspan> από οποιονδήποτε</text>
-  <text x="64" y="212" class="t">υπολογιστή με internet.</text>
-  <text x="64" y="240" class="t"><tspan class="b">Για:</tspan> κείμενα, τηλέφωνα, έργα, σειρά</text>
-  <text x="64" y="260" class="t">έργων, απόκρυψη έργου.</text>
-  <text x="64" y="279" class="s">Ποιος: όποιος έχει το token του υπολογιστή.</text>
+  <rect x="360" y="136" width="330" height="158" rx="14" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+  <rect x="360" y="136" width="8" height="158" rx="4" fill="#2563eb"/>
+  <text x="382" y="166" class="h">Α. CMS (Sveltia) στον browser</text>
+  <text x="382" y="190" class="t">Από οποιονδήποτε υπολογιστή:</text>
+  <text x="382" y="210" class="m">…github.io/av-website/admin/</text>
+  <text x="382" y="232" class="t">«Sign In Using Access Token».</text>
+  <text x="382" y="258" class="t"><tspan class="b">Για:</tspan> κείμενα, τηλέφωνα, αριθμούς,</text>
+  <text x="382" y="278" class="t">σειρά/απόκρυψη έργων, λίγες φωτο.</text>
 
-  <!-- Coding agent -->
-  <rect x="40" y="306" width="360" height="190" rx="14" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
-  <rect x="40" y="306" width="8" height="190" rx="4" fill="#7c3aed"/>
-  <text x="64" y="336" class="h">Β. Coding agent (Claude Code)</text>
-  <text x="64" y="362" class="t">Στον υπολογιστή του γραφείου,</text>
-  <text x="64" y="382" class="t">μέσα στον φάκελο του site.</text>
-  <text x="64" y="410" class="t"><tspan class="b">Για:</tspan> νέο έργο από φάκελο του NAS,</text>
-  <text x="64" y="430" class="t">φωτογραφίες, αλλαγές εμφάνισης.</text>
-  <text x="64" y="458" class="t">Δείχνει πρώτα τη σελίδα τοπικά.</text>
-  <text x="64" y="478" class="t">Ανεβαίνει <tspan class="b">μόνο</tspan> όταν πεις «ναι».</text>
+  <!-- Agent -->
+  <rect x="360" y="312" width="330" height="236" rx="14" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+  <rect x="360" y="312" width="8" height="236" rx="4" fill="#7c3aed"/>
+  <text x="382" y="342" class="h">Β. AI agent (Claude)</text>
+  <text x="382" y="366" class="t">Claude app → φάκελος σε κάθε PC:</text>
+  <text x="382" y="386" class="m">C:\Sites\av-website</text>
+  <text x="382" y="412" class="t"><tspan class="b">Για:</tspan> νέο έργο από το NAS,</text>
+  <text x="382" y="432" class="t">μεταφράσεις, μαζικές αλλαγές.</text>
+  <text x="382" y="460" class="s">1. Φέρνει πρώτα τα νέα από GitHub (pull)</text>
+  <text x="382" y="478" class="s">2. Κάνει την αλλαγή</text>
+  <text x="382" y="496" class="s">3. Σου δείχνει τη σελίδα τοπικά</text>
+  <text x="382" y="514" class="s">4. Ανεβαίνει μόνο όταν πεις «ναι» (push)</text>
+  <text x="382" y="536" class="s">Κανόνες του agent: AGENTS.md</text>
 
   <!-- GitHub -->
-  <rect x="470" y="186" width="260" height="230" rx="14" fill="#24292f"/>
-  <text x="494" y="222" font-size="22" font-weight="700" fill="#fff">GitHub</text>
-  <text x="494" y="250" font-size="15" fill="#d0d7de">Η αποθήκη του site.</text>
-  <text x="494" y="280" font-size="15" fill="#d0d7de">Όλα τα αρχεία, μαζί με</text>
-  <text x="494" y="300" font-size="15" fill="#d0d7de">το ιστορικό κάθε αλλαγής.</text>
-  <text x="494" y="330" font-size="15" fill="#d0d7de">Κάθε αλλαγή γυρίζει πίσω.</text>
-  <text x="494" y="366" font-size="13" fill="#ffd33d" font-weight="700">Δημόσιο: τα βλέπει</text>
-  <text x="494" y="385" font-size="13" fill="#ffd33d" font-weight="700">όποιος θέλει.</text>
+  <rect x="740" y="186" width="220" height="250" rx="14" fill="#24292f"/>
+  <text x="762" y="222" font-size="22" font-weight="700" fill="#fff">GitHub</text>
+  <text x="762" y="250" font-size="15" fill="#d0d7de">Η μία αποθήκη.</text>
+  <text x="762" y="276" font-size="15" fill="#d0d7de">Όλα τα αρχεία + το</text>
+  <text x="762" y="296" font-size="15" fill="#d0d7de">ιστορικό κάθε αλλαγής.</text>
+  <text x="762" y="322" font-size="15" fill="#d0d7de">Κάθε αλλαγή γυρίζει</text>
+  <text x="762" y="342" font-size="15" fill="#d0d7de">πίσω (revert).</text>
+  <text x="762" y="378" font-size="13" fill="#ffd33d" font-weight="700">Δημόσιο: τα βλέπει</text>
+  <text x="762" y="396" font-size="13" fill="#ffd33d" font-weight="700">όποιος θέλει.</text>
+  <text x="762" y="422" font-size="12" fill="#8c959f">civilavlachos-hub/av-website</text>
 
   <!-- Site online -->
-  <rect x="800" y="186" width="360" height="230" rx="14" fill="#fff" stroke="#15803d" stroke-width="2.5"/>
-  <rect x="800" y="186" width="8" height="230" rx="4" fill="#15803d"/>
-  <text x="824" y="222" class="h">Το site online</text>
-  <text x="824" y="250" class="t">GitHub Pages: δωρεάν hosting.</text>
-  <text x="824" y="280" class="t">Μετά από κάθε αλλαγή χτίζεται</text>
-  <text x="824" y="300" class="t">ξανά μόνο του, σε <tspan class="b">1-2 λεπτά</tspan>.</text>
-  <text x="824" y="330" class="t">Δεν χρειάζεται server ή</text>
-  <text x="824" y="350" class="t">συντήρηση.</text>
-  <text x="824" y="385" class="s">Διεύθυνση: github.io ή δικό σας domain.</text>
+  <rect x="1000" y="186" width="250" height="250" rx="14" fill="#fff" stroke="#15803d" stroke-width="2.5"/>
+  <rect x="1000" y="186" width="8" height="250" rx="4" fill="#15803d"/>
+  <text x="1022" y="222" class="h">Το site online</text>
+  <text x="1022" y="250" class="t">GitHub Pages (δωρεάν).</text>
+  <text x="1022" y="276" class="t">Χτίζεται ξανά μόνο του</text>
+  <text x="1022" y="296" class="t">μετά από κάθε αλλαγή,</text>
+  <text x="1022" y="316" class="t">σε <tspan class="b">1-2 λεπτά</tspan>.</text>
+  <text x="1022" y="346" class="t">Αν κάτι είναι λάθος, το</text>
+  <text x="1022" y="366" class="t">site μένει όπως ήταν.</text>
+  <text x="1022" y="400" class="s">civilavlachos-hub.github.io/</text>
+  <text x="1022" y="416" class="s">av-website/</text>
 
-  <!-- Βέλη πάνω σειράς -->
-  <path class="ln" d="M400,211 C440,211 440,260 466,260"/>
-  <text x="404" y="176" class="lbl">«Αποθήκευση»</text>
-  <path class="ln" d="M400,401 C440,401 440,350 466,350"/>
-  <text x="414" y="424" class="lbl">push</text>
-  <path class="ln" d="M730,301 L796,301"/>
-  <text x="737" y="290" class="lbl">αυτόματα</text>
+  <!-- Βέλη -->
+  <path class="ln" d="M320,270 C340,270 340,400 356,400"/>
+  <text x="0" y="0" class="lbl" transform="translate(337,372) rotate(-90)">διαβάζει</text>
+  <path class="ln" d="M690,200 C716,200 716,250 736,250"/>
+  <text x="694" y="182" class="lbl">Save</text>
+  <path class="ln" d="M690,420 C716,420 716,370 736,370"/>
+  <text x="696" y="446" class="lbl">push</text>
+  <path class="dl" d="M740,300 C716,300 716,330 694,330"/>
+  <text x="704" y="292" class="lbl">pull</text>
+  <path class="ln" d="M960,311 L996,311"/>
+  
+  <path class="dl" d="M850,436 L850,566 L175,566 L175,488"/>
+  <text x="866" y="520" class="lbl">Δευτέρα 10:00:</text>
+  <text x="866" y="538" class="lbl">αντίγραφο στο NAS\backup</text>
 
-  <!-- Δεύτερη σειρά -->
-  <text x="40" y="536" class="k">ΑΣΦΑΛΕΙΑ</text>
-  <text x="800" y="536" class="k">ΟΤΑΝ ΓΡΑΦΕΙ ΕΝΑΣ ΠΕΛΑΤΗΣ</text>
+  <!-- Πότε συγχρονίζεται -->
+  <text x="30" y="600" class="k">ΠΟΤΕ ΣΥΓΧΡΟΝΙΖΕΤΑΙ ΤΙ</text>
+  <rect x="30" y="614" width="740" height="250" rx="14" fill="#fff" stroke="#d0d7de" stroke-width="2"/>
+  <text x="52" y="648" class="t"><tspan class="b">Save στο CMS</tspan> → αμέσως στο GitHub → online σε 1-2 λεπτά.</text>
+  <text x="52" y="680" class="t"><tspan class="b">Agent</tspan> → πρώτα pull από GitHub· push μόνο με «ναι» → online σε 1-2 λεπτά.</text>
+  <text x="52" y="712" class="t"><tspan class="b">C:\Sites\av-website</tspan> σε κάθε PC = τοπικό αντίγραφο. Ενημερώνεται</text>
+  <text x="52" y="732" class="t">μόνο με pull (το κάνει ο agent πριν δουλέψει, και το backup κάθε Δευτέρα).</text>
+  <text x="52" y="764" class="t"><tspan class="b">Δευτέρα 10:00</tspan> (Task Scheduler στο PC): pull + backup στο NAS\backup.</text>
+  <text x="52" y="796" class="t"><tspan class="b">ΝΕΑ-ΕΡΓΑ</tspan> στο NAS: δεν ανεβαίνει μόνο του. Ο agent το διαβάζει όταν του πεις</text>
+  <text x="52" y="816" class="t">«Πρόσθεσε το έργο από τον φάκελο ΝΕΑ-ΕΡΓΑ\…» ή «Τι νέο υπάρχει στο NAS;».</text>
+  <text x="52" y="846" class="s">Δύο άτομα αλλάζουν το ίδιο έργο ταυτόχρονα; Ο agent το βλέπει στο pull και ρωτάει.</text>
 
-  <!-- ΑΝΑΚΤΗΣΗ -->
-  <rect x="40" y="550" width="360" height="130" rx="14" fill="#fff" stroke="#b45309" stroke-width="2.5" stroke-dasharray="7 5"/>
-  <text x="64" y="582" class="h">Φάκελος «ΑΝΑΚΤΗΣΗ»</text>
-  <text x="64" y="608" class="t">Τυπωμένος + στο NAS. Λογαριασμοί,</text>
-  <text x="64" y="628" class="t">recovery codes, τι κάνεις αν χαθεί</text>
-  <text x="64" y="648" class="t">υπολογιστής ή λογαριασμός.</text>
-  <text x="64" y="670" class="s">Χωρίς κωδικούς: μόνο πού φυλάσσονται.</text>
-
-  <!-- Backup -->
-  <rect x="470" y="550" width="260" height="130" rx="14" fill="#fff" stroke="#b45309" stroke-width="2.5"/>
-  <rect x="470" y="550" width="8" height="130" rx="4" fill="#b45309"/>
-  <text x="494" y="582" class="h">Backup στο NAS</text>
-  <text x="494" y="608" class="t">Κάθε Δευτέρα 10:00,</text>
-  <text x="494" y="628" class="t">αυτόματα. Όλο το site</text>
-  <text x="494" y="648" class="t">μαζί με το ιστορικό.</text>
-  <path class="ln" d="M600,416 L600,546"/>
-  <text x="610" y="490" class="lbl">αντίγραφο</text>
-
-  <!-- Φόρμα -->
-  <rect x="800" y="550" width="360" height="130" rx="14" fill="#fff" stroke="#0e7490" stroke-width="2.5"/>
-  <rect x="800" y="550" width="8" height="130" rx="4" fill="#0e7490"/>
-  <text x="824" y="582" class="h">Φόρμα επικοινωνίας</text>
-  <text x="824" y="608" class="t">Επισκέπτης → Web3Forms →</text>
-  <text x="824" y="628" class="t"><tspan class="b">email στο γραφείο</tspan>.</text>
-  <text x="824" y="650" class="s">Δωρεάν έως 250 μηνύματα τον μήνα.</text>
-  <text x="824" y="668" class="s">Κλειδί: CMS → Επικοινωνία.</text>
-  <path class="ln" d="M1110,416 L1110,546"/>
+  <!-- Πού είναι τι -->
+  <text x="800" y="600" class="k">ΠΟΥ ΕΙΝΑΙ ΤΙ</text>
+  <rect x="800" y="614" width="450" height="250" rx="14" fill="#fff" stroke="#d0d7de" stroke-width="2"/>
+  <text x="822" y="648" class="t"><tspan class="b">Έργα:</tspan> src/content/projects/*.el.md, *.en.md</text>
+  <text x="822" y="674" class="t"><tspan class="b">Στοιχεία γραφείου:</tspan> src/data/site.json</text>
+  <text x="822" y="700" class="t"><tspan class="b">Φωτογραφίες:</tspan> public/images/projects/</text>
+  <text x="822" y="726" class="t"><tspan class="b">Token CMS:</tspan> .secrets\cms-token.txt</text>
+  <text x="822" y="744" class="s">μόνο τοπικά + password manager, ποτέ στο GitHub</text>
+  <text x="822" y="772" class="t"><tspan class="b">Φόρμα:</tspan> Web3Forms → email γραφείου</text>
+  <text x="822" y="798" class="t"><tspan class="b">Νέος υπολογιστής:</tspan> SETUP.md</text>
+  <text x="822" y="824" class="t"><tspan class="b">Αν χαθούν όλα:</tspan> φάκελος «ΑΝΑΚΤΗΣΗ»</text>
+  <text x="822" y="846" class="s">(τυπωμένος, χωρίς κωδικούς)</text>
 
   <!-- Κανόνες -->
-  <rect x="40" y="712" width="1120" height="160" rx="14" fill="#fff4f2" stroke="#b91c1c" stroke-width="2"/>
-  <text x="64" y="744" class="h" fill="#b91c1c">Τι πρέπει να ξέρεις</text>
-  <text x="64" y="776" class="t"><tspan class="b">1.</tspan> Ό,τι αποθηκεύεις βγαίνει online σε 1-2 λεπτά.</text>
-  <text x="64" y="804" class="t"><tspan class="b">2.</tspan> Ποτέ όνομα πελάτη, διεύθυνση, ΑΦΜ, αριθμό άδειας.</text>
-  <text x="64" y="832" class="t"><tspan class="b">3.</tspan> Φωτογραφίες μόνο μέσω του agent: σβήνει το GPS.</text>
-  <text x="620" y="776" class="t"><tspan class="b">4.</tspan> Λάθος; Κάθε αλλαγή γυρίζει πίσω από το ιστορικό.</text>
-  <text x="620" y="804" class="t"><tspan class="b">5.</tspan> Κωδικοί και tokens ποτέ στη συνομιλία με το AI.</text>
-  <text x="620" y="832" class="t"><tspan class="b">6.</tspan> Κάτι χάλασε; Ρώτα τον agent: «γιατί δεν βγήκε online;»</text>
+  <rect x="30" y="894" width="1220" height="180" rx="14" fill="#fff4f2" stroke="#b91c1c" stroke-width="2"/>
+  <text x="52" y="928" class="h" fill="#b91c1c">Τι πρέπει να ξέρεις</text>
+  <text x="52" y="960" class="t"><tspan class="b">1.</tspan> Ό,τι αποθηκεύεις βγαίνει online σε 1-2 λεπτά.</text>
+  <text x="52" y="990" class="t"><tspan class="b">2.</tspan> Ποτέ όνομα πελάτη, διεύθυνση, ΑΦΜ, αριθμό άδειας.</text>
+  <text x="52" y="1020" class="t"><tspan class="b">3.</tspan> Φωτογραφίες μόνο με άδεια του πελάτη.</text>
+  <text x="52" y="1050" class="t"><tspan class="b">4.</tspan> Νέο έργο με πολλές φωτογραφίες: μέσω agent (σβήνει GPS).</text>
+  <text x="660" y="960" class="t"><tspan class="b">5.</tspan> Λάθος; «Γύρνα πίσω την τελευταία αλλαγή».</text>
+  <text x="660" y="990" class="t"><tspan class="b">6.</tspan> Κωδικοί και tokens ποτέ στη συνομιλία με το AI.</text>
+  <text x="660" y="1020" class="t"><tspan class="b">7.</tspan> Κάτι χάλασε; Ρώτα: «γιατί δεν βγήκε online;»</text>
+  <text x="660" y="1050" class="t"><tspan class="b">8.</tspan> Πριν δουλέψεις στο PC: ο agent κάνει πρώτα pull.</text>
 </svg>
