@@ -2,7 +2,7 @@
 # Τα πεδία των έργων πρέπει να ταιριάζουν με το src/content.config.ts. Άλλαξε και τα δύο μαζί.
 backend:
   name: github
-  repo: angelospk/av-website # ΑΛΛΑΞΕ: <λογαριασμός-γραφείου>/av-website
+  repo: civilavlachos-hub/av-website
   branch: main
   # Login: «Sign In Using Access Token» (SETUP.md Φάση 3). Κουμπί GitHub: SETUP.md Παράρτημα (base_url).
   commit_messages:
