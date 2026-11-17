@@ -1,41 +1,20 @@
-// Photo carousel for a project: CSS scroll-snap slides (native swipe) + arrows + thumbnails.
-// An optional first slide holds the 3D model (loaded only when the carousel mounts).
-// Markup: carouselHTML() below. Usage: const destroy = mountCarousel(root).
+// Project page photos: the slider at the top, and the same photos full screen (fs.js, #photos).
+// Slider = CSS scroll-snap (native swipe) + arrows + arrow keys.
 (() => {
-  const here = document.currentScript.src;
   const motion = () => (matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
-  // pics: [cover, ...gallery]; model: URL or empty.
-  // Κείμενα στη γλώσσα της σελίδας (window.T, από το src/i18n.ts). Χωρίς T: ελληνικά.
-  const t = Object.assign({ photos: "Φωτογραφίες", photo: "Φωτογραφία", prev: "Προηγούμενη", next: "Επόμενη", model3d: "3D μοντέλο", model3dHint: "3D · σύρετε για περιστροφή" }, window.T);
-  window.carouselHTML = (pics, model, title) => {
-    const slides = (model ? [`<div class="slide slide-3d"><canvas aria-label="${esc(t.model3d)}: ${esc(title)}"></canvas><span class="label slide-hint">${esc(t.model3dHint)}</span></div>`] : [])
-      .concat(pics.map((g, i) => `<img class="slide" src="${esc(g)}" alt="${i ? "" : esc(title)}" ${i ? 'loading="lazy"' : ""}>`));
-    const thumbs = (model ? [`<button type="button" class="thumb-3d" aria-label="${esc(t.model3d)}"><span>3D</span></button>`] : [])
-      .concat(pics.map((g, i) => `<button type="button" aria-label="${esc(t.photo)} ${i + 1}"><img src="${esc(g)}" alt="" loading="lazy"></button>`));
-    const many = slides.length > 1;
-    return `<div class="dlg-hero media" data-model="${esc(model || "")}">
-      <div class="slides" tabindex="0" aria-label="${esc(t.photos)}">${slides.join("")}</div>
-      ${many ? `<button type="button" class="arrow prev" aria-label="${esc(t.prev)}">‹</button><button type="button" class="arrow next" aria-label="${esc(t.next)}">›</button>` : ""}
-    </div>${many ? `<div class="gallery">${thumbs.join("")}</div>` : ""}`;
-  };
-
-  // root: element that contains the .media and the .gallery.
-  window.mountCarousel = (root) => {
-    const media = root.querySelector(".media");
-    if (!media) return () => {};
+  // media: element with .slides (and optional .prev/.next). onChange(i) after each move.
+  const slider = (media, onChange = () => {}) => {
     const track = media.querySelector(".slides");
-    const thumbs = [...root.querySelectorAll(".gallery button")];
     const prev = media.querySelector(".prev"), next = media.querySelector(".next");
     const n = track.children.length;
-    const index = () => Math.round(track.scrollLeft / track.clientWidth);
-    const go = (i) => track.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * track.clientWidth, behavior: motion() });
+    const index = () => Math.round(track.scrollLeft / (track.clientWidth || 1));
+    const go = (i, instant) => track.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * track.clientWidth, behavior: instant ? "instant" : motion() });
     const sync = () => {
       const i = index();
-      thumbs.forEach((b, j) => b.setAttribute("aria-pressed", j === i));
       if (prev) prev.disabled = i === 0;
       if (next) next.disabled = i === n - 1;
+      onChange(i);
     };
     let raf = 0;
     track.addEventListener("scroll", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); });
@@ -45,19 +24,51 @@
       if (e.key === "ArrowLeft") { e.preventDefault(); go(index() - 1); }
       if (e.key === "ArrowRight") { e.preventDefault(); go(index() + 1); }
     });
-    thumbs.forEach((b, j) => b.addEventListener("click", () => {
-      go(j);
-      media.scrollIntoView({ behavior: motion(), block: "nearest" });
-    }));
     sync();
+    return { go, index, sync, slide: (i) => track.children[i], track };
+  };
 
-    let dispose = () => {}, gone = false;
-    const canvas = media.querySelector(".slide-3d canvas");
-    if (canvas && media.dataset.model) {
-      import(new URL("model3d.js", here).href).then(({ mountModel }) => {
-        if (!gone) dispose = mountModel(canvas, media.dataset.model);
-      });
-    }
-    return () => { gone = true; dispose(); };
+  window.mountProjectPhotos = () => {
+    const heroMedia = document.querySelector(".hero-media");
+    const dlg = document.querySelector("dialog.fs-photos");
+    if (!heroMedia || !dlg) return;
+    const total = heroMedia.querySelector(".slides").children.length;
+    const count = (el, i) => { el.textContent = `${i + 1} / ${total}`; };
+    const heroCount = heroMedia.querySelector(".count");
+    const thumbs = [...document.querySelectorAll(".gallery [data-photo]")];
+    const hero = slider(heroMedia, (i) => {
+      count(heroCount, i);
+      thumbs.forEach((b, j) => b.setAttribute("aria-pressed", j === i));
+    });
+    const big = slider(dlg.querySelector(".media"), (i) => count(dlg.querySelector(".count"), i));
+
+    // The photo you clicked grows to full screen, and shrinks back to where the slider is.
+    const NAME = "photo-zoom";
+    const name = (el, on) => { if (el) el.style.viewTransitionName = on ? NAME : ""; };
+    let at = 0;
+    const layer = fsLayer(dlg, "#photos", {
+      before(i = hero.index()) { at = i; name(hero.slide(at), true); },
+      show() {
+        name(hero.slide(at), false);
+        big.go(at, true);
+        big.sync();
+        name(big.slide(at), true);
+        big.track.focus({ preventScroll: true });
+      },
+      after() { name(big.slide(at), false); },
+      beforeHide() { at = big.index(); name(big.slide(at), true); },
+      hide() {
+        name(big.slide(at), false);
+        hero.go(at, true);
+        name(hero.slide(at), true);
+      },
+      afterHide() { name(hero.slide(at), false); },
+    });
+
+    hero.track.addEventListener("click", (e) => { if (e.target.closest(".slide")) layer.open(hero.index()); });
+    heroMedia.querySelector("[data-open-photos]").addEventListener("click", () => layer.open(hero.index()));
+    thumbs.forEach((b) => b.addEventListener("click", () => layer.open(+b.dataset.photo)));
+    // A tap on the dark space around a photo closes the gallery.
+    dlg.addEventListener("click", (e) => { if (e.target.classList.contains("slides") || e.target === dlg) layer.close(); });
   };
 })();

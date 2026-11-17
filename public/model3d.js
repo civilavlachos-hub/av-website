@@ -1,6 +1,6 @@
 // Shared 3D viewer: loads a glTF/GLB model (Draco ok), shows it with its own materials,
 // "builds" it from the ground up while the camera moves in, then turns slowly.
-// Used by the home hero (hero3d.js) and by project photos (carousel.js).
+// Used by the home hero (hero3d.js) and by the full-screen 3D viewer (fs.js).
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -15,8 +15,9 @@ const loader = new GLTFLoader().setDRACOLoader(draco);
 const SIZE = 13; // model fitted to ~13 units wide
 const ease = (k) => 1 - Math.pow(1 - k, 3);
 
-// hero: true = home page (fog, grid, offset framing, no zoom). Otherwise a viewer with zoom.
-export function mountModel(canvas, url, { hero = false } = {}) {
+// hero: true = home page (fog, grid, offset framing, no zoom).
+// full: true = full-screen viewer (zoom, one-finger orbit on phones).
+export function mountModel(canvas, url, { hero = false, full = false } = {}) {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let renderer;
   try {
@@ -52,7 +53,7 @@ export function mountModel(canvas, url, { hero = false } = {}) {
   if (hero) scene.add(new THREE.GridHelper(40, 40, 0x2a2e33, 0x1a1d21));
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 200);
-  const near = hero ? 1 : 0.62; // project viewer: closer, the model fills the photo frame
+  const near = hero ? 1 : full ? 0.8 : 0.62; // smaller = camera closer to the model
   const end = new THREE.Vector3(26, 8.5, 26).multiplyScalar(near); // final camera position
   const from = new THREE.Vector3(34, 22, 12).multiplyScalar(near); // intro: higher and further round
   camera.position.copy(reduce ? end : from);
@@ -68,8 +69,8 @@ export function mountModel(canvas, url, { hero = false } = {}) {
   controls.maxPolarAngle = 1.3; // camera stays above the ground: no view from below
   controls.autoRotate = !reduce;
   controls.autoRotateSpeed = 0.6;
-  // OrbitControls sets touch-action:none inline; the project viewer keeps vertical page scroll.
-  if (!hero) canvas.style.touchAction = "pan-y";
+  // OrbitControls sets touch-action:none inline; an embedded viewer keeps vertical page scroll.
+  if (!hero && !full) canvas.style.touchAction = "pan-y";
   // Hero on any touch device: it fills the screen, so keep vertical scroll and drop drag-to-orbit.
   if (hero && matchMedia("(any-pointer: coarse)").matches) {
     controls.enabled = false;
@@ -113,7 +114,7 @@ export function mountModel(canvas, url, { hero = false } = {}) {
       else camera.setViewOffset(w, h, 0, h * 0.2, w, h);
       camera.fov = w > 960 ? 32 : 44;
     } else {
-      camera.fov = w / h < 1.2 ? 44 : 30;
+      camera.fov = w / h < 1.2 ? (full && w / h < 0.8 ? 58 : 44) : 30; // tall phone screen: wider view
     }
     camera.updateProjectionMatrix();
   }
@@ -121,13 +122,15 @@ export function mountModel(canvas, url, { hero = false } = {}) {
   ro.observe(canvas);
   resize();
 
-  // Pause rendering when the canvas is off-screen (or on a hidden carousel slide).
+  // Pause rendering when the canvas is off-screen, or hidden under the full-screen viewer.
   let visible = true;
   const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
   io.observe(canvas);
+  const under = !canvas.closest("dialog");
+  const html = document.documentElement;
 
   renderer.setAnimationLoop(() => {
-    if (!visible) return;
+    if (!visible || (under && html.classList.contains("fs-open"))) return;
     const k = reduce ? 1 : Math.min(1, Math.max(0, (performance.now() - start) / DUR));
     if (!reduce) clip.constant = ease(k) * (height + 0.5);
     if (intro && start !== Infinity) {

@@ -1,0 +1,22 @@
+---
+// Το 3D μοντέλο ενός έργου σε πλήρη οθόνη (το ανοίγει το public/fs.js, με #3d στη διεύθυνση).
+// href: αν δοθεί, κουμπί «Δείτε το έργο» (στην αρχική). Στη σελίδα του έργου δεν χρειάζεται.
+import { T, type Lang } from "../i18n";
+interface Props { lang: Lang; title: string; model: string; href?: string }
+const { lang, title, model, href } = Astro.props;
+const t = T[lang];
+---
+<dialog class="fs fs-3d" data-model={model} aria-label={`${t.model3d}: ${title}`}>
+  <canvas></canvas>
+  <div class="fs-bar">
+    <div>
+      <p class="label">{t.model3d}</p>
+      <p class="fs-title">{title}</p>
+    </div>
+    <button type="button" class="fs-close" data-close aria-label={t.close}>✕</button>
+  </div>
+  <div class="fs-foot">
+    <p class="label">{t.model3dHint}</p>
+    {href && <a class="btn btn-ghost btn-sm" href={href}>{t.viewProject} →</a>}
+  </div>
+</dialog>

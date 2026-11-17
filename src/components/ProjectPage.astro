@@ -1,6 +1,9 @@
 ---
 // Μία σελίδα έργου, σε μία γλώσσα: /erga/<id>/ (el) και /en/projects/<id>/ (en).
+// Πάνω: οι φωτογραφίες (σύρετε/βελάκια). Κλικ σε φωτογραφία: γκαλερί σε πλήρη οθόνη (#photos).
+// Αν το έργο έχει 3D μοντέλο: κουμπί «3D» που το ανοίγει σε πλήρη οθόνη (#3d).
 import Base from "../layouts/Base.astro";
+import Viewer3D from "./Viewer3D.astro";
 import { u, fixHtml } from "../lib/url";
 import { T, path, projectPath, type Lang } from "../i18n";
 import type { Project } from "../lib/projects";
@@ -8,27 +11,28 @@ import type { Project } from "../lib/projects";
 interface Props { lang: Lang; p: Project }
 const { lang, p: d } = Astro.props;
 const t = T[lang];
-const pics = [d.cover, ...d.gallery];
-const many = pics.length + (d.model ? 1 : 0) > 1;
+const pics = [d.cover, ...d.gallery].map(u);
+const many = pics.length > 1;
+const model = d.model ? u(d.model) : "";
 ---
 <Base title={`${d.title} | ${t.name}`} description={d.summary} lang={lang} alt={projectPath(lang === "el" ? "en" : "el", d.id)}>
-{d.model && <link slot="head" rel="preload" as="fetch" crossorigin="anonymous" href={u(d.model)}>}
 <main class="project-page">
-  <div class="carousel-root">
-    <div class="dlg-hero media" data-model={d.model ? u(d.model) : ""}>
-      <div class="slides" tabindex="0" aria-label={t.photos}>
-        {d.model && <div class="slide slide-3d"><canvas aria-label={`${t.model3d}: ${d.title}`}></canvas><span class="label slide-hint">{t.model3dHint}</span></div>}
-        {pics.map((g, i) => <img class="slide" src={u(g)} alt={i ? "" : d.title} loading={i ? "lazy" : undefined}>)}
-      </div>
-      {many && <><button type="button" class="arrow prev" aria-label={t.prev}>‹</button><button type="button" class="arrow next" aria-label={t.next}>›</button></>}
+  <div class="dlg-hero media hero-media">
+    <div class="slides" tabindex="0" aria-label={t.photos}>
+      {pics.map((g, i) => <img class="slide" src={g} alt={i ? "" : d.title} loading={i ? "lazy" : undefined}>)}
     </div>
-    {many && (
-      <div class="gallery wrap">
-        {d.model && <button type="button" class="thumb-3d" aria-label={t.model3d}><span>3D</span></button>}
-        {pics.map((g, i) => <button type="button" aria-label={`${t.photo} ${i + 1}`}><img src={u(g)} alt="" loading="lazy"></button>)}
-      </div>
-    )}
+    {many && <><button type="button" class="arrow prev" aria-label={t.prev}>‹</button><button type="button" class="arrow next" aria-label={t.next}>›</button></>}
+    <div class="media-pills">
+      {model && <button type="button" class="pill pill-3d" data-open-3d><span aria-hidden="true">⟲</span> {t.view3d}</button>}
+      <button type="button" class="pill pill-count" data-open-photos aria-label={t.photos}><span aria-hidden="true">⛶</span> <span class="count">1 / {pics.length}</span></button>
+    </div>
   </div>
+  {(many || model) && (
+    <div class="gallery wrap">
+      {model && <button type="button" class="thumb-3d" data-open-3d aria-label={t.view3d}><span>3D</span></button>}
+      {pics.map((g, i) => <button type="button" data-photo={i} aria-label={`${t.photo} ${i + 1}`}><img src={g} alt="" loading="lazy"></button>)}
+    </div>
+  )}
   <div class="dlg-body wrap">
     <div>
       <p class="label">{[d.place, d.year, d.status].filter(Boolean).join(" · ")}</p>
@@ -50,7 +54,22 @@ const many = pics.length + (d.model ? 1 : 0) > 1;
     </div>
   </div>
 </main>
-<script slot="scripts" is:inline set:html={`window.T=${JSON.stringify({ photos: t.photos, photo: t.photo, prev: t.prev, next: t.next, model3d: t.model3d, model3dHint: t.model3dHint }).replace(/</g, "\\u003c")};`}></script>
+
+<dialog class="fs fs-photos" aria-label={`${t.photos}: ${d.title}`}>
+  <div class="media">
+    <div class="slides" tabindex="0">
+      {pics.map((g, i) => <img class="slide" src={g} alt={i ? `${t.photo} ${i + 1}` : d.title} loading="lazy" decoding="async">)}
+    </div>
+    {many && <><button type="button" class="arrow prev" aria-label={t.prev}>‹</button><button type="button" class="arrow next" aria-label={t.next}>›</button></>}
+  </div>
+  <div class="fs-bar">
+    <p class="label count">1 / {pics.length}</p>
+    <button type="button" class="fs-close" data-close aria-label={t.close}>✕</button>
+  </div>
+</dialog>
+{model && <Viewer3D lang={lang} title={d.title} model={model} />}
+
+<script slot="scripts" is:inline src={u("/fs.js")}></script>
 <script slot="scripts" is:inline src={u("/carousel.js")}></script>
 <script slot="scripts" is:inline>
   (() => {
@@ -58,7 +77,7 @@ const many = pics.length + (d.model ? 1 : 0) > 1;
     const set = (o) => { nav.classList.toggle("open", o); btn.setAttribute("aria-expanded", o); };
     btn.addEventListener("click", () => set(!nav.classList.contains("open")));
     nav.classList.add("scrolled");
-    mountCarousel(document.querySelector(".carousel-root"));
+    mountProjectPhotos();
   })();
 </script>
 </Base>

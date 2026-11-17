@@ -16,19 +16,28 @@
   $("#filters").innerHTML = cats.map(([v, c], i) =>
     `<button class="chip" type="button" aria-pressed="${i === 0}" data-cat="${esc(v)}">${esc(c)}</button>`).join("");
 
-  // Projects
+  // Projects: each card is a link to the project's own page.
+  // Old links with #project-<id> (from the earlier pop-up window) go to that page.
+  const old = location.hash.match(/^#project-(.+)$/);
+  if (old) {
+    let id = null;
+    try { id = decodeURIComponent(old[1]); } catch { /* malformed hash */ }
+    const p = PROJECTS.find((x) => x.id === id);
+    if (p) { location.replace(p.href); return; }
+  }
   const statusClass = (p) => (p.live ? "status live" : "status");
   // Μόνο τα στοιχεία που υπάρχουν: κενό έτος ή κατάσταση δεν φαίνεται.
   const meta = (...xs) => xs.filter(Boolean).map(esc).join(" · ");
   $("#projectGrid").innerHTML = PROJECTS.map((p) => `
-    <button class="card reveal${p.wide ? " wide" : ""}" data-id="${esc(p.id)}" data-cats="${esc(p.categories.join("|"))}">
+    <a class="card reveal${p.wide ? " wide" : ""}" href="${esc(p.href)}" data-cats="${esc(p.categories.join("|"))}">
       <div class="img">
         <img src="${esc(p.cover)}" alt="${esc(p.title)}" loading="lazy">
         ${p.status ? `<span class="${statusClass(p)}">${esc(p.status)}</span>` : ""}
+        ${p.model ? `<span class="badge-3d" title="${esc(T.hasModel)}" aria-label="${esc(T.hasModel)}">3D</span>` : ""}
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="label meta">${meta(p.place, p.year, p.categories.join(" / "))}</p>
-    </button>`).join("");
+    </a>`).join("");
 
   $("#filters").addEventListener("click", (e) => {
     const b = e.target.closest(".chip");
@@ -42,57 +51,26 @@
     });
   });
 
-  // Project dialog (deep link: #project-<id>)
-  const dlg = $("#projectDialog");
-  let destroyCarousel = () => {};
-  const openProject = (id) => {
-    const p = PROJECTS.find((x) => x.id === id);
-    if (!p) return;
-    const facts = Object.entries(p.facts || {}).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
-    const tl = (p.timeline || []).map((t) => `<li class="${t.done ? "done" : ""}"><span class="label">${esc(t.date)}</span>${esc(t.label)}</li>`).join("");
-    destroyCarousel(); // free the old 3D viewer before its canvas leaves the DOM
-    $("#dlgBody").innerHTML = `
-      ${carouselHTML([p.cover, ...(p.gallery || [])], p.model, p.title)}
-      <div class="dlg-body">
-        <div>
-          <p class="label">${meta(p.place, p.year, p.status)}</p>
-          <h2 id="dlgTitle">${esc(p.title)}</h2>
-          <p>${esc(p.summary)}</p>
-          <div class="md">${p.html || ""}</div>
-          ${tl ? `<ul class="timeline">${tl}</ul>` : ""}
-        </div>
-        <div>
-          <dl class="facts">${facts}</dl>
-          <div class="tags">${p.categories.map((c) => `<span>${esc(c)}</span>`).join("")}</div>
-          <p><a class="btn btn-ghost btn-sm" href="${esc(p.href)}">${esc(T.projectPage)}</a></p>
-        </div>
-      </div>`;
-    if (!dlg.open) dlg.showModal();
-    destroyCarousel = mountCarousel($("#dlgBody"));
-    dlg.scrollTop = 0;
-    history.replaceState(null, "", `#project-${id}`);
+  // Page change animation (View Transitions): the card photo grows into the project's big photo,
+  // and back again. Only the card being opened (or returned to) gets the shared name.
+  const cardFor = (url) => {
+    if (!url) return null;
+    const path = new URL(url).pathname;
+    return [...document.querySelectorAll(".card")].find((c) => new URL(c.href).pathname === path);
   };
-  $("#projectGrid").addEventListener("click", (e) => {
-    const c = e.target.closest(".card");
-    if (c) openProject(c.dataset.id);
-  });
-  let closingFromHash = false;
-  dlg.addEventListener("close", () => {
-    destroyCarousel();
-    destroyCarousel = () => {};
-    if (!closingFromHash && location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + "#projects");
-    closingFromHash = false;
-  });
-  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
-  const fromHash = () => {
-    const m = location.hash.match(/^#project-(.+)$/);
-    let id = null;
-    if (m) { try { id = decodeURIComponent(m[1]); } catch { /* malformed hash */ } }
-    if (id && PROJECTS.some((p) => p.id === id)) openProject(id);
-    else if (dlg.open) { closingFromHash = true; dlg.close(); }
+  const tag = (card) => {
+    document.querySelectorAll(".card .img").forEach((el) => { el.style.viewTransitionName = ""; });
+    if (card) card.querySelector(".img").style.viewTransitionName = "project-photo";
   };
-  addEventListener("hashchange", fromHash);
-  fromHash();
+  addEventListener("pageswap", (e) => { if (e.viewTransition) tag(cardFor(e.activation?.entry?.url)); });
+  addEventListener("pagereveal", (e) => {
+    if (!e.viewTransition) return;
+    const card = cardFor(window.navigation?.activation?.from?.url);
+    if (!card) return;
+    card.classList.add("in", "now"); // no fade-in: the photo is arriving from the project page
+    tag(card);
+    e.viewTransition.finished.finally(() => { tag(null); card.classList.remove("now"); });
+  });
 
   // Process
   const steps = $("#steps"); // missing when the section is hidden from the CMS

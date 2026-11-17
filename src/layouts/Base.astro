@@ -22,6 +22,8 @@ const there = Astro.site ? new URL(alt, Astro.site).href : alt;
 <link rel="alternate" hreflang={lang} href={here}>
 <link rel="alternate" hreflang={other} href={there}>
 <link rel="stylesheet" href={u("/styles.css")}>
+<!-- Page change animation: wait for the scripts at the end (they draw the project cards) before the first paint. -->
+<link rel="expect" href="#page-end" blocking="render">
 <script type="importmap" is:inline>
 { "imports": {
   "three": "https://unpkg.com/three@0.170.0/build/three.module.min.js",
@@ -53,5 +55,6 @@ const there = Astro.site ? new URL(alt, Astro.site).href : alt;
   <span class="label">{t.footerLabel}</span>
 </footer>
 <slot name="scripts" />
+<i id="page-end" hidden></i>
 </body>
 </html>

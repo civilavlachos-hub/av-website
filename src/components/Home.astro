@@ -1,7 +1,8 @@
 ---
 // Η αρχική σελίδα, σε μία γλώσσα. Τη χρησιμοποιούν το src/pages/index.astro (el) και το src/pages/en/index.astro (en).
 import Base from "../layouts/Base.astro";
-import { base, u, fixHtml } from "../lib/url";
+import Viewer3D from "./Viewer3D.astro";
+import { base, u } from "../lib/url";
 import { T, siteFor, path, projectPath, type Lang } from "../i18n";
 import { getProjects } from "../lib/projects";
 
@@ -11,20 +12,28 @@ const t = T[lang];
 const site = siteFor(lang);
 
 // Έργα: από src/content/projects/, χωρίς τα draft, ταξινόμηση με "order".
+// Οι κάρτες θέλουν μόνο τα βασικά· τα υπόλοιπα είναι στη σελίδα κάθε έργου.
 const projects = (await getProjects(lang)).map((p) => ({
-  ...p,
+  id: p.id,
+  title: p.title,
+  place: p.place,
+  year: p.year,
+  status: p.status,
+  live: p.live,
+  wide: p.wide,
+  categories: p.categories,
   cover: u(p.cover),
-  gallery: p.gallery.map(u),
-  model: p.model ? u(p.model) : "",
-  facts: Object.fromEntries(p.facts.map((f) => [f.label, f.value])),
-  // Η περιγραφή σε HTML, από το Markdown, την ώρα του build (περιεχόμενο από το repo).
-  html: fixHtml(p.html),
+  model: !!p.model,
   href: projectPath(lang, p.id),
 }));
+// Το 3D μοντέλο της αρχικής (και σε πλήρη οθόνη). Αν το έργο του είναι κρυφό, χωρίς κουμπί «Δείτε το έργο».
+const heroId = "tsoukalades-villa";
+const heroModel = u(`/models/${heroId}.glb`);
+const heroProject = projects.find((p) => p.id === heroId);
 // Φίλτρα: οι κατηγορίες που έχουν τα έργα, με τη σειρά που εμφανίζονται.
 const categories = [...new Set(projects.flatMap((p) => p.categories))];
 // Κείμενα που χρειάζονται τα scripts (app.js, carousel.js).
-const ui = { all: t.all, projectPage: t.projectPage, photos: t.photos, photo: t.photo, prev: t.prev, next: t.next, model3d: t.model3d, model3dHint: t.model3dHint };
+const ui = { all: t.all, hasModel: t.hasModel };
 // JSON μέσα σε <script>: το "<" γίνεται < για να μην κλείσει το tag.
 const json = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c");
 const data = `window.BASE=${json(base)};window.T=${json(ui)};window.SERVICES=${json(site.services)};window.STEPS=${json(site.steps)};window.CATEGORIES=${json(categories)};window.PROJECTS=${json(projects)};`;
@@ -36,7 +45,7 @@ const form = { off: fill(t.formOff), sending: t.formSending, ok: t.formOk, fail:
 <!-- 3D hero: fetch everything in parallel instead of one after another. -->
 <link rel="modulepreload" href="https://unpkg.com/three@0.170.0/build/three.module.min.js">
 <link rel="modulepreload" href={u("/model3d.js")}>
-<link rel="preload" as="fetch" crossorigin="anonymous" href={u("/models/tsoukalades-villa.glb")}>
+<link rel="preload" as="fetch" crossorigin="anonymous" href={heroModel}>
 <link rel="preload" as="fetch" crossorigin="anonymous" href="https://unpkg.com/three@0.170.0/examples/jsm/libs/draco/gltf/draco_wasm_wrapper.js">
 <link rel="preload" as="fetch" crossorigin="anonymous" href="https://unpkg.com/three@0.170.0/examples/jsm/libs/draco/gltf/draco_decoder.wasm">
 </Fragment>
@@ -44,7 +53,7 @@ const form = { off: fill(t.formOff), sending: t.formSending, ok: t.formOk, fail:
 <main id="top">
 
 <section class="hero">
-  <canvas id="hero3d" aria-label={t.hero3d}></canvas>
+  <canvas id="hero3d" data-model={heroModel} aria-label={t.hero3d}></canvas>
   <div class="hero-shade"></div>
   <div class="hero-inner wrap">
     <p class="label">{t.heroLabel}</p>
@@ -54,6 +63,7 @@ const form = { off: fill(t.formOff), sending: t.formSending, ok: t.formOk, fail:
         <a href="#contact" class="btn btn-primary">{t.ctaVisit}</a>
         <a href="#projects" class="btn btn-ghost">{t.ctaProjects}</a>
       </div>
+      <button type="button" class="btn btn-ghost btn-3d" data-open-3d><span aria-hidden="true">⟲</span> {t.view3d}</button>
     </div>
   </div>
 </section>
@@ -145,14 +155,11 @@ const form = { off: fill(t.formOff), sending: t.formSending, ok: t.formOk, fail:
 
 </main>
 
-<dialog id="projectDialog" class="dlg" aria-labelledby="dlgTitle">
-  <button class="dlg-close" aria-label={t.close} onclick="this.closest('dialog').close()">✕</button>
-  <div id="dlgBody"></div>
-</dialog>
+<Viewer3D lang={lang} title={heroProject?.title ?? t.hero3d} model={heroModel} href={heroProject?.href} />
 
 <Fragment slot="scripts">
 <script is:inline set:html={data}></script>
-<script is:inline src={u("/carousel.js")}></script>
+<script is:inline src={u("/fs.js")}></script>
 <script is:inline src={u("/app.js")}></script>
 <script is:inline type="module" src={u("/hero3d.js")}></script>
 </Fragment>
