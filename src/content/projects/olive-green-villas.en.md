@@ -14,3 +14,5 @@ facts:
 ---
 
 The houses combine stone, wood, steel and glass, with large openings towards the garden. The living spaces connect to the outdoor seating areas and the private pools.
+
+The last two images are the original 3D visualisation from the design stage. Next to the photographs, they show how closely the finished project follows the design.

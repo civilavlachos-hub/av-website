@@ -14,7 +14,7 @@
       },
       {
         "title": "Αρχιτεκτονική μελέτη & 3D",
-        "text": "Πριν βγει η άδεια μπορείτε να δείτε το σπίτι σε 3D και σε φωτορεαλιστικές εικόνες."
+        "text": "Σχεδιάζουμε σε BIM: σχέδια και ποσότητες είναι συνδεδεμένα, οπότε μια αλλαγή περνά παντού και ξέρουμε το κόστος από νωρίς. Πριν βγει η άδεια, βλέπετε το σπίτι σε 3D και σε φωτορεαλιστικές εικόνες."
       },
       {
         "title": "Στατική μελέτη",
@@ -33,8 +33,12 @@
         "text": "Αποτυπώσεις, εξαρτήσεις ΕΓΣΑ87, κτηματολόγιο, χαράξεις στο εργοτάξιο."
       },
       {
+        "title": "Ανακαίνιση",
+        "text": "Ανακαινίσεις σπιτιών και καταστημάτων: από τη μελέτη και την άδεια μέχρι το τελικό αποτέλεσμα, μέσα στον χρόνο και στον προϋπολογισμό που συμφωνήσαμε."
+      },
+      {
         "title": "Κατασκευή & επίβλεψη",
-        "text": "Χτίζουμε με δικά μας συνεργεία ή με εργολάβους που ξέρουμε, και υπογράφετε ένα συμβόλαιο για όλο το έργο."
+        "text": "Χτίζουμε με δικά μας συνεργεία ή με εργολάβους που ξέρουμε, και υπογράφετε ένα συμβόλαιο για όλο το έργο. Βλέπετε την πρόοδο online, με φωτογραφίες και αναφορές, από όπου κι αν είστε. Στο τέλος παίρνετε σχέδια «όπως κατασκευάστηκε» (as-built), με σωληνώσεις και καλώδια, για κάθε μελλοντική επισκευή."
       }
     ],
     "process": {
@@ -88,7 +92,7 @@
       },
       {
         "title": "Architectural design & 3D",
-        "text": "Before the permit is issued, you can see the house in 3D and in photorealistic images."
+        "text": "We design in BIM: drawings and quantities are linked, so a change carries through everywhere and the cost is known early. Before the permit is issued, you can see the house in 3D and in photorealistic images."
       },
       {
         "title": "Structural design",
@@ -107,8 +111,12 @@
         "text": "Topographic surveys, HGRS87 referencing, land registry, setting out on site."
       },
       {
+        "title": "Renovation",
+        "text": "Renovations of homes and shops: from design and permits to the finished result, on the schedule and budget we agreed."
+      },
+      {
         "title": "Construction & supervision",
-        "text": "We build with our own crews or with contractors we know, and you sign one contract for the whole project."
+        "text": "We build with our own crews or with contractors we know, and you sign one contract for the whole project. You follow progress online, with photos and reports, wherever you are. At the end you receive as-built drawings, with pipes and cables, for any future repair."
       }
     ],
     "process": {
