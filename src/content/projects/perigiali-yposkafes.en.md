@@ -1,6 +1,6 @@
 ---
-title: Earth-sheltered houses in Perigiali
-place: Perigiali, Lefkada
+title: Earth-sheltered houses in Syvota
+place: Syvota, Lefkada
 summary: Houses set into the hillside, with green roofs that carry the landscape over them.
 facts:
   - label: Images

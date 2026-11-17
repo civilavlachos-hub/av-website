@@ -1,7 +1,7 @@
 ---
 slug: perigiali-yposkafes
-title: Υπόσκαφες κατοικίες στο Περιγιάλι
-place: Περιγιάλι, Λευκάδα
+title: Υπόσκαφες κατοικίες στα Σύβοτα
+place: Σύβοτα, Λευκάδα
 categories:
   - Κατοικία
 order: 7
