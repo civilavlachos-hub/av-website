@@ -9,7 +9,9 @@
   // Run fn as one animated change of the page (or just run it, on older browsers).
   window.fsTransition = (fn) => {
     if (!document.startViewTransition || reduce()) { fn(); return Promise.resolve(); }
-    return document.startViewTransition(fn).finished.catch(() => {});
+    const vt = document.startViewTransition(fn);
+    vt.ready.catch(() => {}); // a quick second click skips the first animation: not an error
+    return vt.finished.catch(() => {});
   };
 
   // hooks: before / show / after (opening), beforeHide / hide / afterHide (closing).
@@ -47,16 +49,20 @@
   // 3D viewer: <dialog class="fs fs-3d" data-model="..."> with a <canvas>. Any [data-open-3d] opens it.
   const dlg = document.querySelector("dialog.fs-3d");
   if (!dlg) return;
-  const canvas = dlg.querySelector("canvas");
-  let dispose = () => {}, alive = false;
+  // Every opening gets a new <canvas>: closing frees the old one's WebGL context for good,
+  // so drawing on it again would show an empty screen.
+  let run = 0, dispose = () => {}, old = () => {};
   const layer = fsLayer(dlg, "#3d", {
     show() {
-      alive = true;
+      const id = ++run;
+      const canvas = document.createElement("canvas");
+      dlg.querySelector("canvas").replaceWith(canvas);
       import(new URL("model3d.js", here).href).then(({ mountModel }) => {
-        if (alive) dispose = mountModel(canvas, dlg.dataset.model, { full: true });
+        if (id === run) dispose = mountModel(canvas, dlg.dataset.model, { full: true });
       });
     },
-    afterHide() { alive = false; dispose(); dispose = () => {}; },
+    beforeHide() { run++; old = dispose; dispose = () => {}; },
+    afterHide() { old(); old = () => {}; },
   });
   window.open3d = layer.open;
   document.addEventListener("click", (e) => { if (e.target.closest("[data-open-3d]")) layer.open(); });
